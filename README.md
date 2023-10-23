@@ -1,5 +1,7 @@
-To run:
+## Run Locally:
 
+
+To install dependencies:
 1. Run `npm install` to install the necessary dependencies.
 
     ```
@@ -36,3 +38,11 @@ Sample `.env` file:
 ```
 BOT_TOKEN="your_bot_token" CHAT_ID="your_chat_id"
 ```
+
+## How to Deploy to Netlify
+
+To deploy to Netlify:
+
+1. Update the schedule in `deploy.js` under the `netlify/functions` folder.
+2. Upload all files, including `niner.json`, to Netlify.
+3. Add a `.env` file to Netlify with the following environment variables:

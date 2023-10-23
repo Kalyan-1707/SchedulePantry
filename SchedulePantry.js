@@ -7,6 +7,7 @@ const TelegramBot = require('node-telegram-bot-api');
 require("dotenv").config();
 
 
+
 chromium.use(stealth);
 
 const userAgentStrings = [
@@ -35,7 +36,7 @@ async function ScheduleAppointment({page}) {
  
 }
 
-async function main() {
+async function SchedulePantry() {
   const browser = await chromium.launch({
     headless: false, // setting this to true will not run the UI
   });
@@ -62,18 +63,20 @@ async function main() {
   const element = await page.$('text=Web Authentication @ Charlotte');
   const deleteLink = await page.getByRole("link", { name: "Delete" });
   if (await element?.isVisible()){
-    await page.screenshot({ path: "expiredCookies.png" });
+    await page.screenshot({ path: path.join(__dirname, "expiredCookies.png") });
     if(process.env.BOT_TOKEN){
     const bot = new TelegramBot(process.env.BOT_TOKEN)
-    bot.sendPhoto(process.env.CHAT_ID, './expiredCookies.png',{caption: 'Cookies Expired'});
+    bot.sendPhoto(process.env.CHAT_ID, path.join(__dirname, "expiredCookies.png"),{caption: 'Cookies Expired'});
     }
   }
 
   else if (await deleteLink?.isVisible()) {
-    await page.screenshot({ path: "alreadyScheduled.png" });
+    await page.screenshot({ path: path.join(__dirname, "alreadyScheduled.png") });
+    console.log(process.env.BOT_TOKEN)
     if(process.env.BOT_TOKEN){
+      console.log('Already Scheduled')
     const bot = new TelegramBot(process.env.BOT_TOKEN)
-    bot.sendPhoto(process.env.CHAT_ID, './alreadyScheduled.png',{caption: 'Already Scheduled'});
+    bot.sendPhoto(process.env.CHAT_ID, path.join(__dirname, "alreadyScheduled.png"),{caption: 'Already Scheduled'});
     }
   } else {
    
@@ -84,10 +87,10 @@ async function main() {
     // check for confirmation
     const deleteLink = await page.getByRole("link", { name: "Delete" });
     if (await deleteLink?.isVisible()) {
-      await page.screenshot({ path: "confirmation.png" });
+      await page.screenshot({ path: path.join(__dirname, "confirmation.png") });
       if(process.env.BOT_TOKEN){
         const bot = new TelegramBot(process.env.BOT_TOKEN)
-        bot.sendPhoto(process.env.CHAT_ID, './confirmation.png',{caption: 'Booking Confirmed'});
+        bot.sendPhoto(process.env.CHAT_ID,{ path: path.join(__dirname, "confirmation.png") },{caption: 'Booking Confirmed'});
         }
       retries = 0;
       break;
@@ -100,4 +103,7 @@ async function main() {
   await browser.close();
 }
 
-main();
+
+module.exports = {
+  SchedulePantry
+};
