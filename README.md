@@ -46,3 +46,27 @@ To deploy to Netlify:
 1. Update the schedule in `deploy.js` under the `netlify/functions` folder.
 2. Upload all files, including `niner.json`, to Netlify.
 3. Add a `.env` file to Netlify with the following environment variables:
+
+## Schedule on MacOS
+
+1. Create a bash script to run your Node.js script. The bash script should simply contain the command to run your Node.js script. For example, the following bash script will run the Node.js script my-script.js:
+    ```Bash
+    #!/bin/bash
+
+    node /path/to/my-script.js
+    ```
+
+2. Open a terminal window.
+Type the following command to edit your crontab:
+     ```Bash
+
+    crontab -e
+    ```
+
+3. Add a new line to the file and specify the schedule and command for your cron job. For example, the following cron job will run the command /path/to/my-script.sh every day at 12:00 AM:
+
+    ```bash 
+    0 0 * * * /path/to/my-script.sh 
+    ```
+
+     Refer - https://crontab.guru/ for more information.
