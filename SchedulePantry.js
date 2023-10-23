@@ -58,8 +58,18 @@ async function main() {
 
   await page.waitForTimeout(10000); // wait for 5 seconds
 
+  // check if cookies expired and redirected to login
+  const element = await page.$('text=Web Authentication @ Charlotte');
   const deleteLink = await page.getByRole("link", { name: "Delete" });
-  if (await deleteLink.isVisible()) {
+  if (await element?.isVisible()){
+    await page.screenshot({ path: "expiredCookies.png" });
+    if(process.env.BOT_TOKEN){
+    const bot = new TelegramBot(process.env.BOT_TOKEN)
+    bot.sendPhoto(process.env.CHAT_ID, './expiredCookies.png',{caption: 'Cookies Expired'});
+    }
+  }
+
+  else if (await deleteLink?.isVisible()) {
     await page.screenshot({ path: "alreadyScheduled.png" });
     if(process.env.BOT_TOKEN){
     const bot = new TelegramBot(process.env.BOT_TOKEN)
@@ -73,7 +83,7 @@ async function main() {
     await ScheduleAppointment({page});
     // check for confirmation
     const deleteLink = await page.getByRole("link", { name: "Delete" });
-    if (await deleteLink.isVisible()) {
+    if (await deleteLink?.isVisible()) {
       await page.screenshot({ path: "confirmation.png" });
       if(process.env.BOT_TOKEN){
         const bot = new TelegramBot(process.env.BOT_TOKEN)
